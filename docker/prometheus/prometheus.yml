@@ -1,0 +1,78 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 15s
+  evaluation_interval: 15s
+scrape_configs:
+- job_name: prometheus
+  scrape_interval: 15s
+  scrape_timeout: 15s
+  metrics_path: /metrics
+  static_configs:
+  - targets:
+    - localhost:9090
+- job_name: eureka-discovery
+  scrape_interval: 15s
+  scrape_timeout: 15s
+  metrics_path: /metrics
+  consul_sd_configs:
+  - server: prometheus-eureka-server:8761
+    tag_separator: ','
+    allow_stale: true
+    refresh_interval: 30s
+    services: []
+  relabel_configs:
+  - source_labels: [__meta_consul_service]
+    separator: ;
+    regex: (.*)
+    target_label: application
+    replacement: ${1}
+    action: replace
+  - source_labels: [__meta_consul_metadata_metrics_path]
+    separator: ;
+    regex: (.*)
+    target_label: __metrics_path__
+    replacement: ${1}
+    action: replace
+  - source_labels: [__address__]
+    separator: ;
+    regex: (.*)
+    target_label: instance
+    replacement: ${1}
+    action: replace
+- job_name: blackbox-via-service-discovery
+  params:
+    module:
+    - http_2xx
+  scrape_interval: 15s
+  scrape_timeout: 15s
+  metrics_path: /probe
+  consul_sd_configs:
+  - server: prometheus-eureka-server:8761
+    tag_separator: ','
+    allow_stale: true
+    refresh_interval: 30s
+    services: []
+  relabel_configs:
+  - source_labels: [__meta_consul_service]
+    separator: ;
+    regex: (.*)
+    target_label: application
+    replacement: $1
+    action: replace
+  - source_labels: [__address__, __meta_consul_metadata_health_path]
+    separator: ;
+    regex: (.*);(.*)
+    target_label: __param_target
+    replacement: http://${1}${2}
+    action: replace
+  - source_labels: [__address__]
+    separator: ;
+    regex: (.*)
+    target_label: instance
+    replacement: ${1}
+    action: replace
+  - separator: ;
+    regex: (.*)
+    target_label: __address__
+    replacement: blackbox-exporter:9115
+    action: replace

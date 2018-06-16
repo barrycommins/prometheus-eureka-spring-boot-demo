@@ -1,0 +1,42 @@
+version: "3.1"
+services:
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+    ports:
+      - 9090:9090
+    restart: always
+
+  blackbox-exporter:
+    image: prom/blackbox-exporter
+    ports:
+      - 9115:9115
+
+  grafana:
+    image: grafana/grafana
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+
+  prometheus-demo-app:
+    image: barrycommins/prometheus-demo-app
+    ports:
+      - 8080:8080
+    environment:
+      - EUREKA_SERVICE_URI=http://prometheus-eureka-server:8761/eureka
+    depends_on:
+      - prometheus-eureka-server
+    restart: always
+
+  prometheus-eureka-server:
+    image: barrycommins/prometheus-eureka-server
+    ports:
+      - 8761:8761

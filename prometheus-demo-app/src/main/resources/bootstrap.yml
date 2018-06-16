@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: prometheus-demo-app
+eureka:
+  instance:
+    metadata-map:
+      metrics.path: ${management.context-path:}/${endpoints.prometheus.id:prometheus}
+      health.path: ${management.context-path:}/${endpoints.health.id:health}
+      management.context-path: ${management.context-path:}
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVICE_URI:http://localhost:8761/eureka}

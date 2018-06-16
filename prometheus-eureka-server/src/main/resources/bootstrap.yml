@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: prometheus-eureka-server
+eureka:
+  instance:
+    metadata-map:
+      metrics.path: ${management.context-path:}/${endpoints.prometheus.id:prometheus}
+      health.path: ${management.context-path:}/${endpoints.health.id:health}
+      management.context-path: ${management.context-path:}
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
