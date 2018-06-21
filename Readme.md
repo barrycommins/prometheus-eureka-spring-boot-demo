@@ -18,3 +18,15 @@ Then `docker-compose up` to bring up
 * Blackbox Exporter (port 9115)
 * Eureka (port 8761)
 * Spring Boot Demo app registered with Eureka (port 8080)
+
+Go to http://localhost:3000/d/n9TP6fNmk/jvm-micrometer?refresh=5s&orgId=1&from=now-15m&to=now&var-application=PROMETHEUS-DEMO-APP
+
+to see a dashboard with the currently discovered applications. (allow a minute of two for some data to be collected)
+
+
+(username/password is admin/admin)
+
+Dashboard taken from https://grafana.com/dashboards/4701
+
+
+![Grafana Dashboard](./grafana-dashboard.png "Grafana Dashboard")
