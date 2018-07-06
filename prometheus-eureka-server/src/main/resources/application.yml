@@ -1,8 +1,11 @@
 server:
   port: 8761
 management:
-  security:
-    enabled: false
-security:
-  basic:
-    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+spring:
+  mvc:
+    async:
+      request-timeout: 35s

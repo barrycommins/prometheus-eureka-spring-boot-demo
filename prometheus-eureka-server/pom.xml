@@ -19,12 +19,12 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-eureka-server</artifactId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
         <dependency>
             <groupId>at.twinformatics</groupId>
             <artifactId>eureka-consul-adapter</artifactId>
-            <version>0.0.1</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 
