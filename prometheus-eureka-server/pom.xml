@@ -24,7 +24,7 @@
         <dependency>
             <groupId>at.twinformatics</groupId>
             <artifactId>eureka-consul-adapter</artifactId>
-            <version>1.0.0</version>
+            <version>1.4.0</version>
         </dependency>
     </dependencies>
 

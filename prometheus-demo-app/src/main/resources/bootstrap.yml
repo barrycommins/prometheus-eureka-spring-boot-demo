@@ -4,9 +4,9 @@ spring:
 eureka:
   instance:
     metadata-map:
-      metrics.path: ${management.context-path:/actuator}/${endpoints.prometheus.id:prometheus}
-      health.path: ${management.context-path:/actuator}/${endpoints.health.id:health}
-      management.context-path: ${management.context-path:/actuator}
+      metrics.path: /actuator/prometheus
+      health.path: /actuator/health
+      management.context-path: /actuator
   client:
     service-url:
       defaultZone: ${EUREKA_SERVICE_URI:http://localhost:8761/eureka}

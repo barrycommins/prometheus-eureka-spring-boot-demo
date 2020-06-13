@@ -9,7 +9,7 @@ to expose Eureka metadata via Consul apis and using Consul metadata.
 
 Prometheus can then use the native Consul support to discovery targets.
 
-To build use: `mvn clean install`
+To build use: `mvn clean package`
 
 Then `docker-compose up` to bring up
 
@@ -30,3 +30,9 @@ Dashboard taken from https://grafana.com/dashboards/4701
 
 
 ![Grafana Dashboard](./grafana-dashboard.png "Grafana Dashboard")
+
+The Prometheus config has two service discovery config sections.
+One for monitoring metrics via the application's /actuator/prometheus endpoint, the other for monitoring the 
+application via the blackbox exporter, which pings the application's /actuator/health endpoint.
+
+This isn't entirely necessary, but is sometimes useful to probe and application both internally and externally.

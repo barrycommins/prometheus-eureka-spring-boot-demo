@@ -14,7 +14,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "4.6.3"
+      "version": "4.6.1"
     },
     {
       "type": "panel",
@@ -62,14 +62,14 @@
       }
     ]
   },
-  "description": "Dashboard for Micrometer instrumented applications (Java, Spring Boot)",
+  "description": "Dashboard for Micrometer instrumented applications (Java, Spring Boot, Micronaut)",
   "editable": true,
   "gnetId": 4701,
   "graphTooltip": 1,
   "hideControls": false,
   "id": null,
   "links": [],
-  "refresh": "5s",
+  "refresh": "30s",
   "rows": [
     {
       "collapse": false,
@@ -696,23 +696,25 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(tomcat_threads_busy{application=\"$application\", instance=\"$instance\"})",
+              "expr": "tomcat_threads_busy_threads{application=\"$application\", instance=\"$instance\"}",
               "format": "time_series",
               "hide": false,
               "intervalFactor": 2,
-              "legendFormat": "TOMCAT - BUSY",
+              "legendFormat": "TOMCAT - BSY",
               "refId": "A"
             },
             {
-              "expr": "sum(tomcat_threads_current{application=\"$application\", instance=\"$instance\"})",
+              "expr": "tomcat_threads_current_threads{application=\"$application\", instance=\"$instance\"}",
               "format": "time_series",
+              "hide": false,
               "intervalFactor": 2,
-              "legendFormat": "TOMCAT - CURRENT",
+              "legendFormat": "TOMCAT - CUR",
               "refId": "B"
             },
             {
-              "expr": "sum(tomcat_threads_config_max{application=\"$application\", instance=\"$instance\"})",
+              "expr": "tomcat_threads_config_max_threads{application=\"$application\", instance=\"$instance\"}",
               "format": "time_series",
+              "hide": false,
               "intervalFactor": 2,
               "legendFormat": "TOMCAT - MAX",
               "refId": "C"
@@ -722,19 +724,21 @@
               "format": "time_series",
               "hide": false,
               "intervalFactor": 2,
-              "legendFormat": "JETTY - BUSY",
+              "legendFormat": "JETTY - BSY",
               "refId": "D"
             },
             {
               "expr": "jetty_threads_current{application=\"$application\", instance=\"$instance\"}",
               "format": "time_series",
+              "hide": false,
               "intervalFactor": 2,
-              "legendFormat": "JETTY - CURRENT",
+              "legendFormat": "JETTY - CUR",
               "refId": "E"
             },
             {
               "expr": "jetty_threads_config_max{application=\"$application\", instance=\"$instance\"}",
               "format": "time_series",
+              "hide": false,
               "intervalFactor": 2,
               "legendFormat": "JETTY - MAX",
               "refId": "F"
@@ -743,7 +747,7 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Saturation",
+          "title": "Utilisation",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -1075,56 +1079,6 @@
               "legendFormat": "max",
               "refId": "C",
               "step": 2400
-            },
-            {
-              "expr": "process_memory_vss_bytes{application=\"$application\", instance=\"$instance\"}",
-              "format": "time_series",
-              "hide": true,
-              "intervalFactor": 2,
-              "legendFormat": "vss",
-              "metric": "",
-              "refId": "D",
-              "step": 2400
-            },
-            {
-              "expr": "process_memory_rss_bytes{application=\"$application\", instance=\"$instance\"}",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "legendFormat": "rss",
-              "refId": "E",
-              "step": 2400
-            },
-            {
-              "expr": "process_memory_pss_bytes{application=\"$application\", instance=\"$instance\"}",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "legendFormat": "pss",
-              "refId": "F",
-              "step": 2400
-            },
-            {
-              "expr": "process_memory_swap_bytes{application=\"$application\", instance=\"$instance\"}",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "legendFormat": "swap",
-              "refId": "G",
-              "step": 2400
-            },
-            {
-              "expr": "process_memory_swappss_bytes{application=\"$application\", instance=\"$instance\"}",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "legendFormat": "swappss",
-              "refId": "H",
-              "step": 2400
-            },
-            {
-              "expr": "process_memory_pss_bytes{application=\"$application\", instance=\"$instance\"} + process_memory_swap_bytes{application=\"$application\", instance=\"$instance\"}",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "legendFormat": "phys (pss+swap)",
-              "refId": "I",
-              "step": 2400
             }
           ],
           "thresholds": [],
@@ -1212,20 +1166,41 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "(process_memory_pss_bytes{application=\"$application\", instance=\"$instance\"} + process_memory_swap_bytes{application=\"$application\", instance=\"$instance\"}  - on(application,instance) sum(jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\"})  by(application,instance)) >= 0",
+              "expr": "process_memory_vss_bytes{application=\"$application\", instance=\"$instance\"}",
               "format": "time_series",
-              "hide": false,
+              "hide": true,
               "intervalFactor": 2,
-              "legendFormat": "native",
+              "legendFormat": "vss",
               "metric": "",
               "refId": "A",
               "step": 2400
+            },
+            {
+              "expr": "process_memory_rss_bytes{application=\"$application\", instance=\"$instance\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "rss",
+              "refId": "B"
+            },
+            {
+              "expr": "process_memory_swap_bytes{application=\"$application\", instance=\"$instance\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "swap",
+              "refId": "C"
+            },
+            {
+              "expr": "process_memory_rss_bytes{application=\"$application\", instance=\"$instance\"} + process_memory_swap_bytes{application=\"$application\", instance=\"$instance\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "total",
+              "refId": "D"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "JVM Native Memory",
+          "title": "JVM Process Memory",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -1348,7 +1323,7 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "CPU",
+          "title": "CPU Usage",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -1440,17 +1415,11 @@
               "step": 2400
             },
             {
-              "expr": "",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "refId": "B"
-            },
-            {
               "expr": "system_cpu_count{application=\"$application\", instance=\"$instance\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "cpu",
-              "refId": "C"
+              "legendFormat": "cpus",
+              "refId": "B"
             }
           ],
           "thresholds": [],
@@ -1539,7 +1508,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "jvm_threads_live{application=\"$application\", instance=\"$instance\"}",
+              "expr": "jvm_threads_live_threads{application=\"$application\", instance=\"$instance\"}",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "live",
@@ -1548,7 +1517,7 @@
               "step": 2400
             },
             {
-              "expr": "jvm_threads_daemon{application=\"$application\", instance=\"$instance\"}",
+              "expr": "jvm_threads_daemon_threads{application=\"$application\", instance=\"$instance\"}",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "daemon",
@@ -1557,7 +1526,7 @@
               "step": 2400
             },
             {
-              "expr": "jvm_threads_peak{application=\"$application\", instance=\"$instance\"}",
+              "expr": "jvm_threads_peak_threads{application=\"$application\", instance=\"$instance\"}",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "peak",
@@ -1619,7 +1588,14 @@
           ]
         },
         {
-          "aliasColors": {},
+          "aliasColors": {
+            "blocked": "#bf1b00",
+            "new": "#fce2de",
+            "runnable": "#7eb26d",
+            "terminated": "#511749",
+            "timed-waiting": "#c15c17",
+            "waiting": "#eab839"
+          },
           "bars": false,
           "dashLength": 10,
           "dashes": false,
@@ -1627,20 +1603,14 @@
           "editable": true,
           "error": false,
           "fill": 1,
-          "grid": {
-            "leftLogBase": 1,
-            "leftMax": null,
-            "leftMin": null,
-            "rightLogBase": 1,
-            "rightMax": null,
-            "rightMin": null
-          },
-          "id": 61,
+          "id": 124,
           "legend": {
+            "alignAsTable": false,
             "avg": false,
             "current": true,
             "max": true,
             "min": false,
+            "rightSide": false,
             "show": true,
             "total": false,
             "values": true
@@ -1660,50 +1630,23 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "process_open_fds{application=\"$application\", instance=\"$instance\"}",
+              "expr": "jvm_threads_states_threads{application=\"$application\", instance=\"$instance\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "open",
-              "metric": "",
-              "refId": "A",
-              "step": 2400
-            },
-            {
-              "expr": "process_max_fds{application=\"$application\", instance=\"$instance\"}",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "legendFormat": "max",
-              "metric": "",
-              "refId": "B",
-              "step": 2400
-            },
-            {
-              "expr": "process_files_open{application=\"$application\", instance=\"$instance\"}",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "legendFormat": "open",
-              "refId": "C"
-            },
-            {
-              "expr": "process_files_max{application=\"$application\", instance=\"$instance\"}",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "legendFormat": "max",
-              "refId": "D"
+              "legendFormat": "{{state}}",
+              "refId": "A"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "File Descriptors",
+          "title": "Thread States",
           "tooltip": {
-            "msResolution": false,
             "shared": true,
             "sort": 0,
-            "value_type": "cumulative"
+            "value_type": "individual"
           },
           "type": "graph",
-          "x-axis": true,
           "xaxis": {
             "buckets": null,
             "mode": "time",
@@ -1711,19 +1654,13 @@
             "show": true,
             "values": []
           },
-          "y-axis": true,
-          "y_formats": [
-            "short",
-            "short"
-          ],
           "yaxes": [
             {
-              "decimals": 0,
               "format": "short",
               "label": null,
-              "logBase": 10,
+              "logBase": 1,
               "max": null,
-              "min": 0,
+              "min": null,
               "show": true
             },
             {
@@ -1793,7 +1730,7 @@
             }
           ],
           "spaceLength": 10,
-          "span": 12,
+          "span": 9,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -1811,7 +1748,7 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Log Events (1m)",
+          "title": "Log Events",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -1836,11 +1773,117 @@
           "yaxes": [
             {
               "decimals": 0,
-              "format": "short",
+              "format": "opm",
               "label": null,
               "logBase": 1,
               "max": null,
               "min": "0",
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_PROMETHEUS}",
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "leftMin": null,
+            "rightLogBase": 1,
+            "rightMax": null,
+            "rightMin": null
+          },
+          "id": 61,
+          "legend": {
+            "avg": false,
+            "current": true,
+            "max": true,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "process_files_open_files{application=\"$application\", instance=\"$instance\"}",
+              "format": "time_series",
+              "hide": false,
+              "intervalFactor": 2,
+              "legendFormat": "open",
+              "metric": "",
+              "refId": "A",
+              "step": 2400
+            },
+            {
+              "expr": "process_files_max_files{application=\"$application\", instance=\"$instance\"}",
+              "format": "time_series",
+              "hide": false,
+              "intervalFactor": 2,
+              "legendFormat": "max",
+              "metric": "",
+              "refId": "B",
+              "step": 2400
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "File Descriptors",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "x-axis": true,
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "short"
+          ],
+          "yaxes": [
+            {
+              "decimals": 0,
+              "format": "short",
+              "label": null,
+              "logBase": 10,
+              "max": null,
+              "min": 0,
               "show": true
             },
             {
@@ -1911,7 +1954,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", id=\"$jvm_memory_pool_heap\"}",
+              "expr": "jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -1922,7 +1965,7 @@
               "step": 1800
             },
             {
-              "expr": "jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", id=\"$jvm_memory_pool_heap\"}",
+              "expr": "jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -1933,7 +1976,7 @@
               "step": 1800
             },
             {
-              "expr": "jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", id=\"$jvm_memory_pool_heap\"}",
+              "expr": "jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -2045,7 +2088,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", id=\"$jvm_memory_pool_nonheap\"}",
+              "expr": "jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -2056,7 +2099,7 @@
               "step": 1800
             },
             {
-              "expr": "jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", id=\"$jvm_memory_pool_nonheap\"}",
+              "expr": "jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -2067,7 +2110,7 @@
               "step": 1800
             },
             {
-              "expr": "jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", id=\"$jvm_memory_pool_nonheap\"}",
+              "expr": "jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -2168,7 +2211,7 @@
               "expr": "rate(jvm_gc_pause_seconds_count{application=\"$application\", instance=\"$instance\"}[1m])",
               "format": "time_series",
               "hide": false,
-              "intervalFactor": 2,
+              "intervalFactor": 1,
               "legendFormat": "{{action}} ({{cause}})",
               "refId": "A"
             }
@@ -2362,7 +2405,7 @@
           },
           "yaxes": [
             {
-              "format": "bytes",
+              "format": "Bps",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -2433,7 +2476,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "jvm_classes_loaded{application=\"$application\", instance=\"$instance\"}",
+              "expr": "jvm_classes_loaded_classes{application=\"$application\", instance=\"$instance\"}",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "loaded",
@@ -2527,38 +2570,21 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "delta(jvm_classes_loaded{application=\"$application\",instance=\"$instance\"}[5m])",
+              "expr": "delta(jvm_classes_loaded_classes{application=\"$application\",instance=\"$instance\"}[1m])",
               "format": "time_series",
               "hide": false,
-              "intervalFactor": 2,
-              "legendFormat": "class load rate",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "delta-1m",
               "metric": "",
               "refId": "A",
               "step": 1200
-            },
-            {
-              "expr": "jvm_classes_unloaded_total{application=\"$application\",instance=\"$instance\"}",
-              "format": "time_series",
-              "hide": true,
-              "intervalFactor": 2,
-              "legendFormat": "class unload rate",
-              "refId": "B",
-              "step": 1800
-            },
-            {
-              "expr": "jvm_classes_loaded{application=\"$application\",instance=\"$instance\"}-jvm_classes_unloaded_total{application=\"$application\",instance=\"$instance\"}",
-              "format": "time_series",
-              "hide": true,
-              "intervalFactor": 2,
-              "legendFormat": "class unload rate",
-              "refId": "C",
-              "step": 1800
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Class load/unload rate (5m)",
+          "title": "Class delta",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -2581,9 +2607,10 @@
           ],
           "yaxes": [
             {
-              "format": "ops",
+              "decimals": null,
+              "format": "short",
               "label": "",
-              "logBase": 2,
+              "logBase": 1,
               "max": null,
               "min": null,
               "show": true
@@ -2755,7 +2782,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "jvm_buffer_count{application=\"$application\", instance=\"$instance\", id=\"direct\"}",
+              "expr": "jvm_buffer_count_buffers{application=\"$application\", instance=\"$instance\", id=\"direct\"}",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "count",
@@ -2953,7 +2980,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "jvm_buffer_count{application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
+              "expr": "jvm_buffer_count_buffers{application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "count",
@@ -3140,6 +3167,5 @@
   },
   "timezone": "browser",
   "title": "JVM (Micrometer)",
-  "uid": "n9TP6fNmk",
-  "version": 16
+  "version": 24
 }
