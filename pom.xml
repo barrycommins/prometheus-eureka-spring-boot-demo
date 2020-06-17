@@ -67,48 +67,14 @@
                             <goals>
                                 <goal>build-info</goal>
                                 <goal>repackage</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>io.fabric8</groupId>
-                    <artifactId>docker-maven-plugin</artifactId>
-                    <version>${docker-maven-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>build</goal>
+                                <goal>build-image</goal>
                             </goals>
                         </execution>
                     </executions>
                     <configuration>
-                        <images>
-                            <image>
-                                <name>${docker.image.prefix}/${project.artifactId}</name>
-                                <build>
-                                    <from>java:8-alpine</from>
-                                    <tags>
-                                        <tag>${project.version}</tag>
-                                        <tag>latest</tag>
-                                    </tags>
-                                    <entryPoint>
-                                        <exec>
-                                            <arg>sh</arg>
-                                            <arg>-c</arg>
-                                            <!-- @formatter:off -->
-                                            <arg>java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /${project.build.finalName}.jar</arg>
-                                            <!-- @formatter:on -->
-                                        </exec>
-                                    </entryPoint>
-                                    <assembly>
-                                        <targetDir>/</targetDir>
-                                        <descriptorRef>artifact</descriptorRef>
-                                    </assembly>
-                                </build>
-                            </image>
-                        </images>
+                        <image>
+                            <name>barrycommins/${project.artifactId}</name>
+                        </image>
                     </configuration>
                 </plugin>
             </plugins>
