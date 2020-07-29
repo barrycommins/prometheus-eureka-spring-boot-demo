@@ -1,4 +1,4 @@
-# Prometheus with Spring Boot using service discovery via Eureka
+# Prometheus with Spring Boot using service discovery via Eureka [![Build Status](https://travis-ci.com/barrycommins/prometheus-eureka-spring-boot-demo.svg?branch=master)](https://travis-ci.com/github/barrycommins/prometheus-eureka-spring-boot-demo)
 
 Prometheus doesn't natively support Eureka as a service discovery mechanism.
 
