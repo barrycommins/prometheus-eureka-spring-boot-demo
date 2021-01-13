@@ -1,13 +1,15 @@
 # Prometheus with Spring Boot using service discovery via Eureka [![Build Status](https://travis-ci.com/barrycommins/prometheus-eureka-spring-boot-demo.svg?branch=master)](https://travis-ci.com/github/barrycommins/prometheus-eureka-spring-boot-demo)
 
-Prometheus doesn't natively support Eureka as a service discovery mechanism.
+**Update: Prometheus now natively support Eureka as a service discovery mechanism.**
 
-This is a demo of adapting Eureka to support Prometheus, and example of scraping a relabelling configuration.
 
-Uses [Eureka Consul Exporter](https://github.com/twinformatics/eureka-consul-adapter) 
+A previous version of this project used [Eureka Consul Exporter](https://github.com/twinformatics/eureka-consul-adapter) 
 to expose Eureka metadata via Consul apis and using Consul metadata.
 
-Prometheus can then use the native Consul support to discovery targets.
+This was before Eureka was added as a discovery mechanism for Prometheus.
+
+That code can still be found on the _consul_adapter_ branch of this project.
+
 
 To build use: `mvn clean package`
 

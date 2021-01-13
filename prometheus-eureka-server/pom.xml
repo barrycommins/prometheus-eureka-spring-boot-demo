@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
 
     <name>prometheus-eureka-server</name>
-    <description>Eureka Server with Consul Adapter</description>
+    <description>Eureka Server</description>
 
     <parent>
         <groupId>com.barrycommins</groupId>
@@ -20,11 +20,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>at.twinformatics</groupId>
-            <artifactId>eureka-consul-adapter</artifactId>
-            <version>1.4.0</version>
         </dependency>
     </dependencies>
 

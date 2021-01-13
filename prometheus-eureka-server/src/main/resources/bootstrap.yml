@@ -5,8 +5,6 @@ eureka:
   instance:
     metadata-map:
       metrics.path: /actuator/prometheus
-      health.path: /actuator/health
-      management.context-path: /actuator
   client:
     service-url:
       default-zone: http://localhost:8761/eureka

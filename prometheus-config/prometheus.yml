@@ -10,35 +10,21 @@ scrape_configs:
   static_configs:
   - targets:
     - localhost:9090
+# Discover targets from Eureka and scrape metrics from the them
 - job_name: eureka-discovery
   scrape_interval: 15s
   scrape_timeout: 15s
-  metrics_path: /metrics
-  consul_sd_configs:
-  - server: prometheus-eureka-server:8761
-    tag_separator: ','
-    allow_stale: true
+  eureka_sd_configs:
+  - server: http://prometheus-eureka-server:8761/eureka
     refresh_interval: 30s
-    services: []
   relabel_configs:
-  - source_labels: [__meta_consul_service]
-    separator: ;
-    regex: (.*)
+  - source_labels: [__meta_eureka_app_name]
     target_label: application
-    replacement: ${1}
-    action: replace
-  - source_labels: [__meta_consul_service_metadata_metrics_path]
-    separator: ;
-    regex: (.*)
+  - source_labels: [__meta_eureka_app_instance_metadata_metrics_path]
     target_label: __metrics_path__
-    replacement: ${1}
-    action: replace
   - source_labels: [__address__]
-    separator: ;
-    regex: (.*)
     target_label: instance
-    replacement: ${1}
-    action: replace
+# Discover targets from Eureka and probe the health endpoints via the Blackbox Exporter
 - job_name: blackbox-via-service-discovery
   params:
     module:
@@ -46,33 +32,15 @@ scrape_configs:
   scrape_interval: 15s
   scrape_timeout: 15s
   metrics_path: /probe
-  consul_sd_configs:
-  - server: prometheus-eureka-server:8761
-    tag_separator: ','
-    allow_stale: true
-    refresh_interval: 30s
-    services: []
+  eureka_sd_configs:
+    - server: http://prometheus-eureka-server:8761/eureka
+      refresh_interval: 30s
   relabel_configs:
-  - source_labels: [__meta_consul_service]
-    separator: ;
-    regex: (.*)
+  - source_labels: [__meta_eureka_app_name]
     target_label: application
-    replacement: $1
-    action: replace
-  - source_labels: [__address__, __meta_consul_service_metadata_health_path]
-    separator: ;
-    regex: (.*);(.*)
+  - source_labels: [__meta_eureka_app_instance_healthcheck_url]
     target_label: __param_target
-    replacement: http://${1}${2}
-    action: replace
   - source_labels: [__address__]
-    separator: ;
-    regex: (.*)
     target_label: instance
-    replacement: ${1}
-    action: replace
-  - separator: ;
-    regex: (.*)
-    target_label: __address__
+  - target_label: __address__
     replacement: blackbox-exporter:9115
-    action: replace
