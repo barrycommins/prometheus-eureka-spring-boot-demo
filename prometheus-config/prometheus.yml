@@ -2,6 +2,7 @@ global:
   scrape_interval: 15s
   scrape_timeout: 15s
   evaluation_interval: 15s
+# scrape metrics from the prometheus server itself
 scrape_configs:
 - job_name: prometheus
   scrape_interval: 15s
@@ -10,7 +11,7 @@ scrape_configs:
   static_configs:
   - targets:
     - localhost:9090
-# Discover targets from Eureka and scrape metrics from the them
+# Discover targets from Eureka and scrape metrics from them (Whitebox monitoring)
 - job_name: eureka-discovery
   scrape_interval: 15s
   scrape_timeout: 15s
@@ -24,7 +25,7 @@ scrape_configs:
     target_label: __metrics_path__
   - source_labels: [__address__]
     target_label: instance
-# Discover targets from Eureka and probe the health endpoints via the Blackbox Exporter
+# Discover targets from Eureka and probe the health endpoints via the Blackbox Exporter (Blackbox monitoring)
 - job_name: blackbox-via-service-discovery
   params:
     module:

@@ -2,6 +2,7 @@
 
 **Update: Prometheus now natively support Eureka as a service discovery mechanism.**
 
+See: [Prometheus Config for Eureka](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#eureka_sd_config)
 
 A previous version of this project used [Eureka Consul Exporter](https://github.com/twinformatics/eureka-consul-adapter) 
 to expose Eureka metadata via Consul apis and using Consul metadata.
@@ -37,4 +38,4 @@ The Prometheus config has two service discovery config sections.
 One for monitoring metrics via the application's /actuator/prometheus endpoint, the other for monitoring the 
 application via the blackbox exporter, which pings the application's /actuator/health endpoint.
 
-This isn't entirely necessary, but is sometimes useful to probe and application both internally and externally.
+This isn't entirely necessary, but is sometimes useful to probe an application both internally (whitebox monitoring) and externally (blackbox monitoring).
