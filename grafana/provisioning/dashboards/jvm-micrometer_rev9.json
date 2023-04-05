@@ -68,6 +68,7 @@
   "graphTooltip": 1,
   "hideControls": false,
   "id": null,
+  "uid": "micrometer",
   "links": [],
   "refresh": "30s",
   "rows": [
